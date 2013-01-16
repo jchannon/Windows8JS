@@ -9,6 +9,12 @@
     var activation = Windows.ApplicationModel.Activation;
 
     app.onactivated = function (args) {
+        
+        /*
+            When the previous execution state is terminated, that means that, the last time the app ran, Windows successfully suspended the app and then terminated it. 
+            If the app wasn't terminated, the handler treats it as though it's being launched for the first time.
+        */
+
         if (args.detail.kind === activation.ActivationKind.launch) {
             if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
                 // TODO: This application has been newly launched. Initialize
@@ -16,6 +22,16 @@
             } else {
                 // TODO: This application has been reactivated from suspension.
                 // Restore application state here.
+
+                // Retrieve our greetingOutput session state info, 
+                // if it exists. 
+                var outputValue = WinJS.Application.sessionState.greetingOutput;
+                if (outputValue) {
+                    var greetingOutput = document.getElementById("greetingOutput");
+                    greetingOutput.innerText = outputValue;
+                }
+                
+
             }
             args.setPromise(WinJS.UI.processAll().then(function completed() {
 
@@ -31,6 +47,30 @@
                 // Retrieve the button and register our event handler. 
                 var helloButton = document.getElementById("helloButton");
                 helloButton.addEventListener("click", buttonClickHandler, false);
+                
+                // Retrieve the input element and register our
+                // event handler.
+                var nameInput = document.getElementById("nameInput");
+                nameInput.addEventListener("change", nameInputChanged);
+                
+                // Restore app data. 
+                var roamingSettings = Windows.Storage.ApplicationData.current.roamingSettings;
+
+                // Restore the user name.
+                var userName = Windows.Storage.ApplicationData.current.roamingSettings.values["userName"];
+                if (userName) {
+                    nameInput.value = userName;
+                }
+
+
+                // Restore the rating. 
+                var greetingRating = roamingSettings.values["greetingRating"];
+                if (greetingRating) {
+                    ratingControl.userRating = greetingRating;
+                    var ratingOutput = document.getElementById("ratingOutput");
+                    ratingOutput.innerText = greetingRating;
+                }
+                
             }));
             
            
@@ -50,11 +90,28 @@
         var userName = document.getElementById("nameInput").value;
         var greetingString = "Hello, " + userName + "!";
         document.getElementById("greetingOutput").innerText = greetingString;
+        
+        // Save the session data. 
+        WinJS.Application.sessionState.greetingOutput = greetingString;
     }
     
     function ratingChanged(eventInfo) {
         var ratingOutput = document.getElementById("ratingOutput");
         ratingOutput.innerText = eventInfo.detail.tentativeRating;
+        
+        // Store the rating for multiple sessions.
+        var appData = Windows.Storage.ApplicationData.current;
+        var roamingSettings = appData.roamingSettings;
+        roamingSettings.values["greetingRating"] = eventInfo.detail.tentativeRating;
+    }
+    
+    function nameInputChanged(eventInfo) {
+        var nameInput = eventInfo.srcElement;
+
+        // Store the user's name for multiple sessions.
+        var appData = Windows.Storage.ApplicationData.current;
+        var roamingSettings = appData.roamingSettings;
+        roamingSettings.values["userName"] = nameInput.value;
     }
 
     app.start();
