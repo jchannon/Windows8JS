@@ -1,0 +1,9 @@
+C:\Projects\Test\Windows8JS\Windows8JS\bin\Debug\resources.pri
+C:\Projects\Test\Windows8JS\Windows8JS\bin\Debug\AppxManifest.xml
+C:\Projects\Test\Windows8JS\Windows8JS\bin\Debug\Windows8JS.build.appxrecipe
+C:\Projects\Test\Windows8JS\Windows8JS\bld\Debug\priconfig.xml
+C:\Projects\Test\Windows8JS\Windows8JS\bld\Debug\layout.resfiles
+C:\Projects\Test\Windows8JS\Windows8JS\bld\Debug\resources.resfiles
+C:\Projects\Test\Windows8JS\Windows8JS\bld\Debug\pri.resfiles
+C:\Projects\Test\Windows8JS\Windows8JS\bld\Debug\LanguageQualifiers.txt
+C:\Projects\Test\Windows8JS\Windows8JS\bld\Debug\ProjectArchitectures.txt
